@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Mini Search Engine</title>
+<style>
+body{
+    font-family: Arial;
+    text-align: center;
+    margin:40px;
+}
+.result{
+    padding:8px;
+}
+</style>
+</head>
+<body>
+<h1>Web Scour</h1>
+<input type="text" id="query" placeholder="Enter search query">
+<button type="button" onclick="runSearch()">Search</button>
+<div id="results"></div>
+<script>
+async function runSearch(){
+    const query = document.getElementById("query").value;
+    if(query.trim() === ""){
+        alert("Please enter a query");
+        return;
+    }
+    try {
+        const response = await fetch(
+            "http://127.0.0.1:8000/search?query=" + encodeURIComponent(query)
+        );
+        const data = await response.json();
+        const resultsDiv = document.getElementById("results");
+        resultsDiv.innerHTML = "";
+        resultsDiv.innerHTML =
+        "<h3>Results</h3>" +
+        "<b>Query:</b> " + data.query +
+        "<br><b>Tokens:</b> " + data.tokens.join(", ") +
+        "<br><br>";
+        data.results.forEach(item => {
+            const docId = item[0];
+            const score = item[1];
+            const div = document.createElement("div");
+            div.className = "result";
+            div.innerHTML =
+            "<b>Document:</b> " + docId +
+            " | <b>Score:</b> " + score.toFixed(3);
+
+            resultsDiv.appendChild(div);
+
+        });
+    } catch(error) {
+
+        console.error("Error:", error);
+
+    }
+}
+</script>
+</body>
+</html>
