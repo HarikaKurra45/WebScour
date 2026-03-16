@@ -43,7 +43,3 @@ The system consists of four main components:
 - FastAPI  
 - JSON  
 - TF-IDF Information Retrieval  
-
----
-
-## Project Structure
